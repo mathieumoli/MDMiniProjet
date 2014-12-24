@@ -3,7 +3,7 @@ MDMiniProjet
 
 Mini Projet Math Discrete SI3 Molinengo Paris
 
-# Work 1 (22/10/14)
+# Work 1 (23/12/14)
 Etude du projet 
 
 ## Mots Bien Parenthésés
@@ -20,4 +20,14 @@ Etude du projet
    * Des octets sont négatifs ...
    * Comment convertir dans la Base que nous avons en parametre de classe...
 
- 
+# Work 2 (24/12/14)
+
+##GrandEntier
+
+* public void shiftLeft(int n) **OKAY**
+* public GrandEntier add(GrandEntier ge) **OKAY MAIS PEUT ETRE UN PEU COMPLIQUE**
+* public int length() **OKAY**
+* public String toString() **OKAY MAIS A COMPARER AVEC LA VERSION DE BIGINTEGER**
+* accesseurs **OKAY**
+* TestGrandEntier.java **AMELIORE**
+
