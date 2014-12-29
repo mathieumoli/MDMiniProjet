@@ -31,3 +31,10 @@ Etude du projet
 * accesseurs **OKAY**
 * TestGrandEntier.java **AMELIORE**
 
+# Work 23 (29/12/14)
+
+##MotBienParenthese
+
+* public static ArrayList<String> MotBienParenthese(int n) **OKAY**
+
+
