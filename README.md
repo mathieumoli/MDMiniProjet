@@ -31,10 +31,21 @@ Etude du projet
 * accesseurs **OKAY**
 * TestGrandEntier.java **AMELIORE**
 
-# Work 23 (29/12/14)
+# Work 3 (29/12/14)
 
 ##MotBienParenthese
 
 * public static ArrayList<String> MotBienParenthese(int n) **OKAY**
 
+# Work 4 (30/12/14)
 
+##MotBienParenthese **OKAY**
+
+* public static ArrayList<String> MotBienParenthese(int n) **OKAY**
+* public static catalan(int n) **OKAY**
+* public static catalan2(int n) **OKAY**
+* public static TestCatalan2(int n) **OKAY**
+* verification mot BP **OKAY**
+* methode de paranthese a la ligne **OKAY**
+* methode de profondeur d'un mot BP **OKAY**
+* TestMotBienParenthese.java **OKAY**
