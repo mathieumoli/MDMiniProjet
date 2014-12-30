@@ -59,3 +59,14 @@ Etude du projet
 * methode de paranthese a la ligne **OKAY**
 * methode de profondeur d'un mot BP **OKAY**
 * TestMotBienParenthese.java **OKAY**
+
+
+# Work 6 (30/12/14) Mathieu Molinengo
+
+##GrandEntier
+
+* public String toString() **AMELIORE**
+* public GrandEntier multiply(GrandEntier m) **OKAY**
+* public GrandEntier sub(GrandEntier m) **OKAY**
+* public GrandEntier addGrandEntier m) **AMELIORE**
+* TestGrandEntier.java **AMELIORE**

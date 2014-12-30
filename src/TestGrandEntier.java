@@ -18,6 +18,7 @@ public class TestGrandEntier {
 		ArrayList<Integer> b = new ArrayList<Integer>();
 		b.add(1);
 		b.add(15);
+		
 
 		// Creation des grands entiers
 		GrandEntier r0 = new GrandEntier(a);
@@ -26,7 +27,7 @@ public class TestGrandEntier {
 		// Test du toString()
 		System.out.println("Test du toString()");
 		System.out.println(r0.toString());
-		System.out.println("Resultat attendu : [ 1, 15]");
+		System.out.println("Resultat attendu : 1 x 16^1 + 15 x 16^0");
 		System.out
 				.println("_____________________________________________________________________________");
 
@@ -34,7 +35,15 @@ public class TestGrandEntier {
 		System.out.println("Test du add avec retenu et de meme grandeur");
 		GrandEntier r3 = r2.add(r0);
 		System.out.println(r3.toString());
-		System.out.println("Resultat attendu : [0, 1, 1]");
+		System.out.println("Resultat attendu : 1 x 16^2 + 1 x 16^1 + 0 x 16^0");
+		System.out
+				.println("_____________________________________________________________________________");
+
+		// test de la somme avec retenu et de meme grandeur
+		System.out.println("Test du sub avec retenu et de meme grandeur");
+		GrandEntier r9 = r3.sub(r0);
+		System.out.println(r9.toString());
+		System.out.println("Resultat attendu : 15 x 16^1 + 1 x 16^0");
 		System.out
 				.println("_____________________________________________________________________________");
 
@@ -42,7 +51,8 @@ public class TestGrandEntier {
 		System.out.println("Test du shiftLeft");
 		r0.shiftLeft(4);
 		System.out.println(r0.toString());
-		System.out.println("Resultat attendu : [0, 0, 0, 0, 15, 1]");
+		System.out
+				.println("Resultat attendu : 1 x 16^5 + 15 x 16^4 + 0 x 16^3 + 0 x 16^2 + 0 x 16^1 + 0 x 16^0");
 		System.out
 				.println("_____________________________________________________________________________");
 
@@ -52,7 +62,8 @@ public class TestGrandEntier {
 				.println("test du add sans retenu avec un nombre plus grand en terme de \"case\" que l'autre");
 		r3 = r2.add(r0);
 		System.out.println(r3.toString());
-		System.out.println("Resultat attendu : [1, 15, 0, 0, 15, 1]");
+		System.out
+				.println("Resultat attendu : 1 x 16^5 + 15 x 16^4 + 0 x 16^3 + 0 x 16^2 + 15 x 16^1 + 1 x 16^0");
 		System.out
 				.println("_____________________________________________________________________________");
 
@@ -60,7 +71,7 @@ public class TestGrandEntier {
 		System.out
 				.println("test du constructeur GrandEntier(int numBits,Random rnd) avec  256 bits et une base de 16");
 		GrandEntier r1 = new GrandEntier(256, new Random());
-		// System.out.println(r1.toString());
+		System.out.println(r1.toString());
 		System.out.println("Size de l'arrayList " + r1.getDefinition().size());
 		System.out
 				.println("Resultat attendu : 16 est codé sur 4 bits donc size = 256/4=64 soit 64 nombres definissant le grand entier ");
@@ -91,16 +102,77 @@ public class TestGrandEntier {
 		System.out
 				.println("_____________________________________________________________________________");
 
-		// test du constructeur avec un nombre qui tombe correctement remplissant la taille max
+		// test du constructeur avec un nombre qui tombe correctement
+		// remplissant la taille max
 		System.out
-				.println("test du constructeur GrandEntier(int numBits,Random rnd) avec  256 bits et une base de 16");
+				.println("test du constructeur GrandEntier(int numBits,Random rnd) avec  10000000 bits (nombre max de bits) et une base de 16");
 		GrandEntier r6 = new GrandEntier(10000000, new Random());
-		// System.out.println(r1.toString());
 		System.out.println("Size de l'arrayList " + r6.getDefinition().size());
 		System.out
 				.println("Resultat attendu : 16 est codé sur 4 bits donc size = 10000000/4=2500000 soit 2 500 000 nombres definissant le grand entier ");
 		System.out
 				.println("_____________________________________________________________________________");
-	}
 
+		// test de comparaison
+		System.out.println("test de comparaison et d'equals");
+		// le premier plus grand (en nombre et en case) que le second
+		System.out
+				.println("GrandEntier(10000000, new Random()) avec 1 x 16^1 + 15 x 16^0");
+		System.out.println(r6.compareTo(r0));
+		System.out.println("Résultat attendu : 1");
+
+		System.out.println("\n" + r6.equals(r0));
+		System.out.println("Résultat attendu : false\n\n");
+
+		// les mêmes
+		System.out.println("1 x 16^1 + 15 x 16^0 avec 1 x 16^1 + 15 x 16^0");
+		GrandEntier r7 = new GrandEntier(a);
+		System.out.println(r7.toString());
+		System.out.println(r7.compareTo(r7));
+		System.out.println("Résultat attendu : 0");
+		System.out.println("\n" + r7.equals(r7));
+		System.out.println("Résultat attendu : true\n\n");
+
+		System.out.println("1 x 16^1 + 15 x 16^0 avec 2 x 16^1 + 0 x 16^0");
+		// meme longeur mais r8>r7
+		ArrayList<Integer> c = new ArrayList<Integer>();
+		c.add(1);
+		GrandEntier r8 = new GrandEntier(c);
+		r8 = r8.add(r7);
+		System.out.println(r8.toString());
+		System.out.println(r7.compareTo(r8));
+		System.out.println("Résultat attendu : -1");
+		System.out.println("\n" + r7.equals(r8));
+		System.out.println("Résultat attendu : false");
+		System.out
+				.println("_____________________________________________________________________________");
+
+		// test le multiply recursive de la forme vu en TD
+		System.out
+				.println("test le multiply recursive de la forme vu en TD");
+		ArrayList<Integer> d= new ArrayList<Integer>();
+		d.add(0);
+		d.add(1);
+		GrandEntier r11= new GrandEntier(d);
+		GrandEntier r12= new GrandEntier(d);
+		GrandEntier r10 = r11.multiply(r11);
+		System.out.println(r10.toString());
+		System.out
+				.println("Resultat attendu : 1 x 16^2 + 0 x 16^1 + 0 x 16^0 ");
+		ArrayList<Integer> e= new ArrayList<Integer>();
+
+		e.add(15);
+		e.add(15);
+		ArrayList<Integer> f= new ArrayList<Integer>();
+		f.add(14);
+		f.add(14);
+		GrandEntier r13= new GrandEntier(f);
+		GrandEntier r14= new GrandEntier(e);
+		GrandEntier r15 = r13.multiply(r14);
+		System.out.println(r15.toString());
+		System.out
+				.println("Resultat attendu : 1 x 16^2 + 0 x 16^1 + 0 x 16^0 ");
+		System.out
+				.println("_____________________________________________________________________________");
+	}
 }
