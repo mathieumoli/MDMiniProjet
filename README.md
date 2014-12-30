@@ -3,7 +3,7 @@ MDMiniProjet
 
 Mini Projet Math Discrete SI3 Molinengo Paris
 
-# Work 1 (23/12/14)
+# Work 1 (23/12/14) Mathieu Molinengo
 Etude du projet 
 
 ## Mots Bien Parenthésés
@@ -20,7 +20,7 @@ Etude du projet
    * Des octets sont négatifs ...
    * Comment convertir dans la Base que nous avons en parametre de classe...
 
-# Work 2 (24/12/14)
+# Work 2 (24/12/14) Mathieu Molinengo
 
 ##GrandEntier
 
@@ -31,10 +31,16 @@ Etude du projet
 * accesseurs **OKAY**
 * TestGrandEntier.java **AMELIORE**
 
-# Work 23 (29/12/14)
+# Work 3 (29/12/14) Simon Paris
 
 ##MotBienParenthese
 
 * public static ArrayList<String> MotBienParenthese(int n) **OKAY**
 
+# Work 4 (30/12/14) Mathieu Molinengo
 
+##GrandEntier
+
+* Constructeur public GrandEntier(ArrayList<Integer> ge) **AMELIORE**
+* Constructeur public GrandEntier(int nombreDeBits, Random rnd) **OKAY**
+* TestGrandEntier.java **AMELIORE**

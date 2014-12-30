@@ -12,15 +12,22 @@ public class GrandEntier implements Comparable {
 
 	public GrandEntier(ArrayList<Integer> ge) throws Exception {
 		int i;
+		int valeurTestee = -1;
 		for (i = 0; i < ge.size(); i++) {
-			int valeurTestee = ge.get(i);
+			valeurTestee = ge.get(i);
 			if (valeurTestee >= BASE || valeurTestee < 0) {
-				throw new Exception(
+				throw new IllegalArgumentException(
 						"La Base de l'arraylist en parametre est differente de la base du grand entier");
 			}
+		
 		}
+		/*if((ge.get((ge.size()-1)))==0){
+			throw new IllegalArgumentException(
+					"Le nombre dont le poid est le plus lourd (soit celui qui est l'index taille de l'arraylist-1) est egale à 0");
+		}
+		*/
 		definition = ge;
-		Collections.reverse(definition);
+		
 	}
 
 	/**
@@ -28,15 +35,38 @@ public class GrandEntier implements Comparable {
 	 * Pas encore au point voir Work1
 	 */
 	public GrandEntier(int nombreDeBits, Random rnd) {
+		if (nombreDeBits < 0) {
+			throw new IllegalArgumentException(
+					"Le nombre de bits souhaité est négatif");
+		}
 		definition = new ArrayList<Integer>();
-		// récupération du nombre d'octets necessaires
-		int nombreOctets = (int) ((long) nombreDeBits + 7 / 8);
-		// creation d'un tableau d'octets de la longueur necessaire
-		byte[] octetsAleatoires = new byte[nombreOctets];
-		// Creation du nombre Aleatoires en mettant les bits des octets à 0 ou 1
-		// aleatoirement
-		rnd.nextBytes(octetsAleatoires);
-
+		
+		//je compte le nombre de bits pour coder la base
+		int base=BASE;
+		int i;
+		int compteur=0;
+		int nombreRandom;
+		do
+		{
+			compteur++;
+			
+		}while((base/=2)>=2);
+		
+		// je crée le nombre de nombre nécessaire en fonction des bits
+		for(i=0;nombreDeBits>compteur;i++)
+		{
+			nombreRandom = rnd.nextInt(BASE);
+			definition.add(nombreRandom);
+			nombreDeBits-=compteur;
+		}
+		
+		//je m'occupe du dernier qui ne peut pas etre égale à 0
+		int ledernier=(int) Math.pow(2, nombreDeBits);
+		do{
+		nombreRandom= rnd.nextInt(ledernier);
+		}while(nombreRandom==0);
+		definition.add(nombreRandom);
+		
 	}
 
 	@Override
@@ -63,7 +93,8 @@ public class GrandEntier implements Comparable {
 	 * 
 	 * @param ge
 	 * @return resultat the result of the add
-	 * @throws Exception if the GrandEntiers are not with the same "BASE"
+	 * @throws Exception
+	 *             if the GrandEntiers are not with the same "BASE"
 	 */
 	public GrandEntier add(GrandEntier ge) throws Exception {
 		ArrayList<Integer> sommeDef = new ArrayList<Integer>();
@@ -106,7 +137,6 @@ public class GrandEntier implements Comparable {
 		}
 		if (retenu == 1)
 			sommeDef.add(retenu);
-		Collections.reverse(sommeDef);
 		resultat = new GrandEntier(sommeDef);
 
 		return resultat;
