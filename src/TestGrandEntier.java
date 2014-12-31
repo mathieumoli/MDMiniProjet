@@ -149,12 +149,11 @@ public class TestGrandEntier {
 
 		// test le multiply recursive de la forme vu en TD
 		System.out
-				.println("test le multiply recursive de la forme vu en TD");
+				.println("test le multiply recursive de la forme vue en TD");
 		ArrayList<Integer> d= new ArrayList<Integer>();
 		d.add(0);
 		d.add(1);
 		GrandEntier r11= new GrandEntier(d);
-		GrandEntier r12= new GrandEntier(d);
 		GrandEntier r10 = r11.multiply(r11);
 		System.out.println(r10.toString());
 		System.out
@@ -171,8 +170,12 @@ public class TestGrandEntier {
 		GrandEntier r15 = r13.multiply(r14);
 		System.out.println(r15.toString());
 		System.out
-				.println("Resultat attendu : 1 x 16^2 + 0 x 16^1 + 0 x 16^0 ");
+				.println("Resultat attendu : 14 x 16^3 + 13 x 16^2 + 1 x 16^1 + 2 x 16^0");
 		System.out
 				.println("_____________________________________________________________________________");
+		
+		String[] v={"1"};
+		
+		GrandEntier.compareSimpleWithFast(v);
 	}
 }
