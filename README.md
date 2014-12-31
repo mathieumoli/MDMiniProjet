@@ -70,3 +70,18 @@ Etude du projet
 * public GrandEntier sub(GrandEntier m) **OKAY**
 * public GrandEntier addGrandEntier m) **AMELIORE**
 * TestGrandEntier.java **AMELIORE**
+
+# Work 7 (31/12/14) Mathieu Molinengo
+
+##GrandEntier
+
+* ajout de variable de classe zero et un pour optimiser le code
+* public GrandEntier shiftRight(int n) **OKAY**
+* public GrandEntier multiplyFast(GrandEntier ge) **OKAY**
+* private static boolean clearZero(ArrayList<Integer> theArray) **OKAY**
+* public GrandEntier sub(GrandEntier m) **AMELIORE**
+* public static void compareSimpleWithFast(String[] args) throws Exception **STACKOVERFLOW**
+    *trop de création d'objet... je ne sais pas comment le faire...
+ 
+
+
