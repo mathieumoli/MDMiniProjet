@@ -83,5 +83,14 @@ Etude du projet
 * public static void compareSimpleWithFast(String[] args) throws Exception **STACKOVERFLOW**
     *trop de création d'objet... je ne sais pas comment le faire...
  
+# Work 8 (1/1/15) Mathieu Molinengo
+
+##GrandEntier
+
+* public GrandEntier multiplyFast(GrandEntier ge) **OKAY**
+* public static void compareSimpleWithFast(String[] args) throws Exception **STACKOVERFLOW**
+    *mais on constate qu'a partir de 8 bits notre multiplyFast est plus performant que le multiply recursif (Question 7)
+    *comment virer le stackoverflow...
+ 
 
 

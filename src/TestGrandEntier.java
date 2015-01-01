@@ -11,17 +11,20 @@ import java.util.Random;
 public class TestGrandEntier {
 
 	public static void main(String[] args) throws Exception {
-		// Creation de deux ArrayLists définissant les grands entiers
+	//	 Creation de deux ArrayLists définissant les grands entiers
+		ArrayList<Integer> attttt = new ArrayList<Integer>();
+		attttt.add(15);
+		attttt.add(1);
 		ArrayList<Integer> a = new ArrayList<Integer>();
 		a.add(15);
 		a.add(1);
+
 		ArrayList<Integer> b = new ArrayList<Integer>();
 		b.add(1);
 		b.add(15);
-		
 
 		// Creation des grands entiers
-		GrandEntier r0 = new GrandEntier(a);
+		GrandEntier r0 = new GrandEntier(attttt);
 		GrandEntier r2 = new GrandEntier(b);
 
 		// Test du toString()
@@ -39,8 +42,8 @@ public class TestGrandEntier {
 		System.out
 				.println("_____________________________________________________________________________");
 
-		// test de la somme avec retenu et de meme grandeur
-		System.out.println("Test du sub avec retenu et de meme grandeur");
+		// test de la difference avec retenue et de meme grandeur
+		System.out.println("Test du sub avec retenue et de meme grandeur");
 		GrandEntier r9 = r3.sub(r0);
 		System.out.println(r9.toString());
 		System.out.println("Resultat attendu : 15 x 16^1 + 1 x 16^0");
@@ -49,7 +52,7 @@ public class TestGrandEntier {
 
 		// test du shiftLeft
 		System.out.println("Test du shiftLeft");
-		r0.shiftLeft(4);
+		GrandEntier tro=r0.shiftLeft(4);
 		System.out.println(r0.toString());
 		System.out
 				.println("Resultat attendu : 1 x 16^5 + 15 x 16^4 + 0 x 16^3 + 0 x 16^2 + 0 x 16^1 + 0 x 16^0");
@@ -60,7 +63,7 @@ public class TestGrandEntier {
 		// "case" que l'autre
 		System.out
 				.println("test du add sans retenu avec un nombre plus grand en terme de \"case\" que l'autre");
-		r3 = r2.add(r0);
+		r3 = r2.add(tro);
 		System.out.println(r3.toString());
 		System.out
 				.println("Resultat attendu : 1 x 16^5 + 15 x 16^4 + 0 x 16^3 + 0 x 16^2 + 15 x 16^1 + 1 x 16^0");
@@ -173,9 +176,34 @@ public class TestGrandEntier {
 				.println("Resultat attendu : 14 x 16^3 + 13 x 16^2 + 1 x 16^1 + 2 x 16^0");
 		System.out
 				.println("_____________________________________________________________________________");
+
+		ArrayList<Integer> ae = new ArrayList<Integer>();
+		ae.add(15);
+		ae.add(1);
+		ae.add(12);
+		ae.add(1);
+		ArrayList<Integer> be = new ArrayList<Integer>();
+		be.add(1);
+		be.add(15);
+		be.add(2);
+
+		GrandEntier r01=new GrandEntier(ae);
+		GrandEntier r21=new GrandEntier(be);
+		System.out.println(r01.toString());
+		System.out.println(r21.toString());
+		System.out.println(r01.multiplyFast(r21));
+		System.out.println(r01.multiply(r21));
 		
 		String[] v={"1"};
+		try{
+		      GrandEntier.compareSimpleWithFast(v);
+		   }catch(Exception w){
+		      System.err.println("Le programme a besoin d'en entier en paramètre pour specifier le nombre de tests dans une serie de test");
+		      w.printStackTrace();
+		   }
 		
-		GrandEntier.compareSimpleWithFast(v);
+
+
+		
 	}
 }

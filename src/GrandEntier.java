@@ -3,22 +3,22 @@ import java.util.Random;
 
 public class GrandEntier {
 
-	final private static GrandEntier zero = new GrandEntier(0);
-	final private static GrandEntier un = new GrandEntier(1);
+	static public GrandEntier zero = new GrandEntier(0);
+	static public GrandEntier un = new GrandEntier(1);
 	final static int BASE = 16;
 	final static int MAXBITLENGTH = 10000000;
 	private ArrayList<Integer> definition;
 
-	public GrandEntier(int lenombre){
-		definition=new ArrayList<Integer>();
+	public GrandEntier(int lenombre) {
+		definition = new ArrayList<Integer>();
 		definition.add(lenombre);
 	}
+
 	public GrandEntier(ArrayList<Integer> ge) {
 		int i;
 		int valeurTestee = -1;
-		if(GrandEntier.clearZero(ge))
-		{
-			ge=(ArrayList<Integer>) zero.getDefinition();
+		if (GrandEntier.clearZero(ge)) {
+			ge = (ArrayList<Integer>) zero.getDefinition();
 		}
 		for (i = 0; i < ge.size(); i++) {
 			valeurTestee = ge.get(i);
@@ -41,7 +41,6 @@ public class GrandEntier {
 		definition = ge;
 
 	}
-
 
 	private static boolean clearZero(ArrayList<Integer> theArray) {
 		int i;
@@ -130,11 +129,11 @@ public class GrandEntier {
 	}
 
 	public GrandEntier shiftRight(int n) {
-		if (n < 0) {
+		if (n <= 0) {
 			throw new IllegalArgumentException(
-					"le nombre donné en parametre est négatif !");
+					"le nombre donné en parametre est négatif ou egal à 0 absurde !  !");
 		}
-		if (n > this.length()) {
+		if (n >= this.length()) {
 			throw new IllegalArgumentException(
 					"le nombre donné en parametre est superieur aux chiffres composants le GrandEntier shiftRight impossible!");
 		}
@@ -157,12 +156,12 @@ public class GrandEntier {
 	public GrandEntier add(GrandEntier ge) {
 		ArrayList<Integer> sommeDef = new ArrayList<Integer>();
 		GrandEntier plusGrand, plusPetit, resultat;
-		int tailleG, tailleP, somme, i, retenu;
+		int tailleG, tailleP, somme, i, retenu,compare;
 		retenu = 0;
-
+		compare=this.compareTo(ge);
 		// la comparaison pour savoir lequel est le plus grand en terme de
 		// "case"
-		if (this.compareTo(ge) == -1) {
+		if (compare == -1) {
 			tailleG = ge.length();
 			tailleP = this.length();
 			plusGrand = ge;
@@ -181,22 +180,17 @@ public class GrandEntier {
 			if (tailleP > i) {
 				somme = plusGrand.getDefinition().get(i)
 						+ plusPetit.getDefinition().get(i) + retenu;
-
-				if (somme >= BASE) {
-					somme %= BASE;
-					retenu = 1;
-				} else {
-					retenu = 0;
-				}
 			} else {
 				// il ne reste plus qu'un seul grandentier mais il y a la
 				// retenue
 				somme = plusGrand.getDefinition().get(i) + retenu;
+			}
+
+			if (somme >= BASE) {
+				somme %= BASE;
+				retenu = 1;
+			} else {
 				retenu = 0;
-				if (somme >= BASE) {
-					somme %= BASE;
-					retenu = 1;
-				}
 			}
 			sommeDef.add(somme);
 
@@ -227,12 +221,14 @@ public class GrandEntier {
 
 	public GrandEntier multiply(GrandEntier m) {
 
-		if (this.equals(zero) || m.equals(zero)) {
+		if (m.equals(zero) || this.equals(zero)) {
 			return zero;
 		}
-		m = m.sub(un);
-		GrandEntier result = (this.multiply(m)).add(this);
-		return result;
+		if(m.equals(un)){
+			return this.multiply(zero).add(this);
+		}
+
+		return this.multiply(m.sub(un)).add(this);
 
 	}
 
@@ -277,55 +273,42 @@ public class GrandEntier {
 	 *             if the GrandEntiers are not with the same "BASE"
 	 */
 	public GrandEntier sub(GrandEntier ge) {
+		int compare = this.compareTo(ge);
+		if (compare == 0)
+			return zero;
+		if (compare == -1)
+			throw new IllegalArgumentException("this<ge");
+
 		ArrayList<Integer> sousDef = new ArrayList<Integer>();
-		GrandEntier plusGrand, plusPetit, resultat;
+		GrandEntier plusGrand, plusPetit,result;
 		int tailleG, tailleP, soustraction, i, retenu;
 		retenu = 0;
-
-		if ((this.compareTo(ge)) == -1) {
-			throw new IllegalArgumentException(
-					"Grand Entier à soustraire est supérieur à l'autre or nous ne formons que des nombres positifs.");
-		} else {
-			tailleG = this.length();
-			tailleP = ge.length();
-			plusGrand = this;
-			plusPetit = ge;
-		}
-
-		// la soustraction
+		plusGrand = this;
+		plusPetit = ge;
+		tailleG = this.length();
+		tailleP = ge.length();
 		for (i = 0; i < tailleG; i++) {
 			soustraction = 0;
-			// la somme de deux nombres de meme poids de deux grandEntiers
-			if (tailleP > i) {
+			if (i < tailleP) {
 				soustraction = plusGrand.getDefinition().get(i)
 						- (plusPetit.getDefinition().get(i) + retenu);
-
 			} else {
-				// il ne reste plus qu'un seul grandEntier mais il y a la
-				// retenue
 				soustraction = plusGrand.getDefinition().get(i) - retenu;
 			}
-			if (i == (tailleG - 1)) {
-				if (tailleG > 1) {
-					if (soustraction == 0) {
-						break;
-					}
-				}
-			}
 			if (soustraction < 0) {
-				soustraction %= BASE;
+				
 				soustraction = BASE + soustraction;
 				retenu = 1;
-			} else {
+			} else
 				retenu = 0;
-			}
 			sousDef.add(soustraction);
-
 		}
-
-		resultat = new GrandEntier(sousDef);
-
-		return resultat;
+		while (sousDef.get(sousDef.size() - 1) == 0) {
+			sousDef.remove(sousDef.size() - 1);
+		}
+		
+		result = new GrandEntier(sousDef);
+		return result;
 
 	}
 
@@ -348,14 +331,14 @@ public class GrandEntier {
 	 */
 	public GrandEntier multiplyFast(GrandEntier ge) {
 		int tailleG;
+		int verification = 0;
 		// couper les entier en deux
 		if (this.length() < ge.length()) {
 			tailleG = this.length();
 		} else {
 			tailleG = ge.length();
 		}
-		// si la taille est egale à 1 alors pas de besoin de faire tout ça car
-		// ça complique le calcul
+		// si la taille est egale à 1 multiplication simple
 		if (tailleG <= 1) {
 			return this.multiply(ge);
 		}
@@ -370,14 +353,33 @@ public class GrandEntier {
 		GrandEntier d = ge.sub(c.shiftLeft(tailleGpar2));
 
 		// creation des differents produits et sommes.
-		GrandEntier ac = a.multiplyFast(c);
-		GrandEntier bd = b.multiplyFast(d);
-		GrandEntier sommeab = a.add(b);
-		GrandEntier sommecd = c.add(d);
-		GrandEntier abcd = sommeab.multiplyFast(sommecd);
+		GrandEntier produitac = a.multiplyFast(c);
+		GrandEntier produitbd = b.multiplyFast(d);
+		GrandEntier differenceab;
+		if (a.compareTo(b) == -1) {
+			differenceab = b.sub(a);
+			verification++;
+		} else
+			differenceab = a.sub(b);
 
-		return ac.add(abcd.sub(ac).sub(bd).shiftLeft(tailleGpar2)).add(
-				bd.shiftLeft(2 * tailleGpar2));
+		GrandEntier differencecd;
+		if (c.compareTo(d) == -1) {
+			differencecd = d.sub(c);
+			verification++;
+		} else
+			differencecd = c.sub(d);
+		GrandEntier produitDiffabEtDiffcd = differenceab
+				.multiplyFast(differencecd);
+		// acxB^tailleG+(ac+bd-(a-b)(c-d))xB^tailleGpar2+bd
+		if ((verification % 2 == 0)) {
+			return (produitac.shiftLeft(2 * tailleGpar2)).add(((produitac.add(
+					produitbd).sub(produitDiffabEtDiffcd)
+					.shiftLeft(tailleGpar2)).add(produitbd)));
+		}
+		return (produitac.shiftLeft(2 * tailleGpar2)).add(((produitac.add(
+				produitbd).add(produitDiffabEtDiffcd).shiftLeft(tailleGpar2))
+				.add(produitbd)));
+
 	}
 
 	/**
@@ -411,7 +413,7 @@ public class GrandEntier {
 			for (int i = 1; i <= n; i++) {
 				a = new GrandEntier(l, r);
 				b = new GrandEntier(l, r);
-				a.multiply(b);
+				 a.multiply(b);
 			}
 			simpleTime = System.currentTimeMillis() - t0;
 			r.setSeed(fixedSeed); // pour générer les memes nombres
