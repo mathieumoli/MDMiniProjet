@@ -10,11 +10,19 @@ public class GrandEntier implements Comparable<GrandEntier> {
 	final static int MAXBITLENGTH = 10000000;
 	private ArrayList<Integer> definition;
 
+	/**
+	 * To create the numbers zero and one
+	 */
 	private GrandEntier(int lenombre) {
 		definition = new ArrayList<Integer>();
 		definition.add(lenombre);
 	}
 
+	/**
+	 * 
+	 * @param ge the Arraylist to create the GrandEntier
+	 * Complexité: linéaire O(n)
+	 */
 	public GrandEntier(ArrayList<Integer> ge) {
 		int i;
 		int valeurTestee = -1;
@@ -43,6 +51,12 @@ public class GrandEntier implements Comparable<GrandEntier> {
 
 	}
 
+	/**
+	 * 
+	 * @param theArray which is verified
+	 * @return true if the arrayList corresponding to zero and false if it's not
+	 * Complexité: lineaire O(n)
+	 */
 	private static boolean clearZero(ArrayList<Integer> theArray) {
 		int i;
 		boolean zer = true;
@@ -58,8 +72,9 @@ public class GrandEntier implements Comparable<GrandEntier> {
 
 	/**
 	 * 
-	 * @param nombreDeBits
-	 * @param rnd
+	 * @param nombreDeBits to create the GrandEntier
+	 * @param rnd the Random to generate random int
+	 * Complexité : linéaire O(n)
 	 */
 	public GrandEntier(int nombreDeBits, Random rnd) {
 		if (nombreDeBits < 0) {
@@ -94,6 +109,10 @@ public class GrandEntier implements Comparable<GrandEntier> {
 
 	}
 
+	/**
+	 * To create a String corresponding to the GrandEntier
+	 * Complexité: lineaire O(n) 
+	 */
 	@Override
 	public String toString() {
 		int i;
@@ -115,6 +134,12 @@ public class GrandEntier implements Comparable<GrandEntier> {
 
 	}
 
+	/**
+	 * 
+	 * @param n the nomber to shift right
+	 * @return the shif lefted GrandEntier
+	 * Complexité : lineaire O(n)
+	 */
 	public GrandEntier shiftLeft(int n) {
 		if (n < 0) {
 			throw new IllegalArgumentException(
@@ -129,6 +154,12 @@ public class GrandEntier implements Comparable<GrandEntier> {
 
 	}
 
+	/**
+	 * 
+	 * @param n the nomber to shift right
+	 * @return the shif righted GrandEntier
+	 * Complexité : lineaire O(n)
+	 */
 	public GrandEntier shiftRight(int n) {
 		if (n <= 0) {
 			throw new IllegalArgumentException(
@@ -153,6 +184,7 @@ public class GrandEntier implements Comparable<GrandEntier> {
 	 * @return resultat the result of the add
 	 * @throws IllegalArgumentException
 	 *             if the GrandEntiers are not with the same "BASE"
+	 * Complexité: lineaire O(n)
 	 */
 	public GrandEntier add(GrandEntier ge) {
 		ArrayList<Integer> sommeDef = new ArrayList<Integer>();
@@ -216,17 +248,23 @@ public class GrandEntier implements Comparable<GrandEntier> {
 		this.definition = definition;
 	}
 
+//	public GrandEntier multiply(GrandEntier m) {
+//
+//		if (m.equals(zero) || this.equals(zero)) {
+//			return zero;
+//		}
+//
+//		return this.multiply(m.sub(un)).add(this);
+//
+//	}
+
+	/**
+	 *  To multiply like elementary school
+	 * @param m the GrandEntier to multiply
+	 * @return the multiplied GrandEntier
+	 * Complexité : exponentiel O(e^n)
+	 */
 	public GrandEntier multiply(GrandEntier m) {
-
-		if (m.equals(zero) || this.equals(zero)) {
-			return zero;
-		}
-
-		return this.multiply(m.sub(un)).add(this);
-
-	}
-
-	public GrandEntier multiplySchool(GrandEntier m) {
 		int i, j, produit, retenu;
 		GrandEntier lepremier= zero;
 		ArrayList<Integer> nouveau = new ArrayList<Integer>();
@@ -253,8 +291,9 @@ public class GrandEntier implements Comparable<GrandEntier> {
 	/**
 	 * 
 	 * @param e
-	 * @return -1, 0 ou 1 si this GrandEntier est numeriquement inferieur, egal,
-	 *         ou superieur à e.
+	 * @return -1, 0 ou 1 if this GrandEntier is below, equal,
+	 *         or greater to e.
+	 *Complexité : lineaire O(n)
 	 */
 
 	public int compareTo(GrandEntier e) {
@@ -289,6 +328,7 @@ public class GrandEntier implements Comparable<GrandEntier> {
 	 * @return resultat the result of the add
 	 * @throws IllegalArgumentException
 	 *             if the GrandEntiers are not with the same "BASE"
+	 * Complexité : lineaire O(n)
 	 */
 	public GrandEntier sub(GrandEntier ge) {
 		int compare = this.compareTo(ge);
@@ -328,7 +368,11 @@ public class GrandEntier implements Comparable<GrandEntier> {
 		return result;
 
 	}
-
+/**
+ * To know if this is equal to the object o
+ * 
+ * Complexité : constante O(1)
+ */
 	public boolean equals(Object o) {
 		if (!(o instanceof GrandEntier)) {
 			return false;
@@ -338,12 +382,15 @@ public class GrandEntier implements Comparable<GrandEntier> {
 		}
 		return true;
 	}
+	
 	/**
 	 * Calcule la multiplication this * ge en utilisant l'algorithme de
 	 * Karatsuba de manière récursive si la taille des Grandentiers >2048 sinon une multiplication simple 
 	 *
 	 * @param ge
 	 * @return Retourne le résultat de la multiplication
+	 * Complexité : quadratique O(n²) (car la m)
+
 	 */
 	public GrandEntier multiplyFastOpti(GrandEntier ge) {
 		int tailleG;
@@ -356,7 +403,7 @@ public class GrandEntier implements Comparable<GrandEntier> {
 		}
 		// si la taille est inferieur à 2048 multiplication simple
 		if (tailleG < 2048) {
-			return this.multiplySchool(ge);
+			return this.multiply(ge);
 		}
 		int tailleGpar2 = (tailleG / 2) + (tailleG % 2);
 
@@ -405,6 +452,7 @@ public class GrandEntier implements Comparable<GrandEntier> {
 	 *
 	 * @param ge
 	 * @return Retourne le résultat de la multiplication
+	 * Complexité : quadratique O(n²) (2 appel recursifs bien que le temps ne correspond pas)
 	 */
 	public GrandEntier multiplyFast(GrandEntier ge) {
 		int tailleG;
@@ -417,7 +465,7 @@ public class GrandEntier implements Comparable<GrandEntier> {
 		}
 		// si la taille est egale à 1 multiplication simple
 		if (tailleG <= 1) {
-			return this.multiplySchool(ge);
+			return this.multiply(ge);
 		}
 		int tailleGpar2 = (tailleG / 2) + (tailleG % 2);
 
@@ -490,7 +538,7 @@ public class GrandEntier implements Comparable<GrandEntier> {
 			for (int i = 1; i <= n; i++) {
 				a = new GrandEntier(l, r);
 				b = new GrandEntier(l, r);
-				a.multiplySchool(b);
+				a.multiply(b);
 			}
 			simpleTime = System.currentTimeMillis() - t0;
 			r.setSeed(fixedSeed); // pour générer les memes nombres
@@ -506,7 +554,7 @@ public class GrandEntier implements Comparable<GrandEntier> {
 			fastTime = System.currentTimeMillis() - t0;
 			System.out.println(l + " || " + simpleTime / n + " | " + fastTime
 					/ n);
-			if(simpleTime>fastTime){System.out.println("Le nombre de bits où multiplyFast est plus rapide que le multiply est : "+l);break;}
+			//if(simpleTime>fastTime){System.out.println("Le nombre de bits où multiplyFast est plus rapide que le multiply est : "+l);break;}
 		}
 		
 	}
