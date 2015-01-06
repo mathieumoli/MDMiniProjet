@@ -1,7 +1,8 @@
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class GrandEntier {
+public class GrandEntier implements Comparable<GrandEntier> {
 
 	static public GrandEntier zero = new GrandEntier(0);
 	static public GrandEntier un = new GrandEntier(1);
@@ -9,7 +10,7 @@ public class GrandEntier {
 	final static int MAXBITLENGTH = 10000000;
 	private ArrayList<Integer> definition;
 
-	public GrandEntier(int lenombre) {
+	private GrandEntier(int lenombre) {
 		definition = new ArrayList<Integer>();
 		definition.add(lenombre);
 	}
@@ -156,28 +157,24 @@ public class GrandEntier {
 	public GrandEntier add(GrandEntier ge) {
 		ArrayList<Integer> sommeDef = new ArrayList<Integer>();
 		GrandEntier plusGrand, plusPetit, resultat;
-		int tailleG, tailleP, somme, i, retenu,compare;
+		int somme, i, retenu, compare;
 		retenu = 0;
-		compare=this.compareTo(ge);
+		compare = this.compareTo(ge);
 		// la comparaison pour savoir lequel est le plus grand en terme de
 		// "case"
 		if (compare == -1) {
-			tailleG = ge.length();
-			tailleP = this.length();
 			plusGrand = ge;
 			plusPetit = this;
 		} else {
-			tailleG = this.length();
-			tailleP = ge.length();
 			plusGrand = this;
 			plusPetit = ge;
 		}
 
 		// l'addition
-		for (i = 0; i < tailleG; i++) {
+		for (i = 0; i < plusGrand.length(); i++) {
 			somme = 0;
 			// la somme de deux nombres de meme poids de deux grandEntiers
-			if (tailleP > i) {
+			if (plusPetit.length() > i) {
 				somme = plusGrand.getDefinition().get(i)
 						+ plusPetit.getDefinition().get(i) + retenu;
 			} else {
@@ -224,12 +221,33 @@ public class GrandEntier {
 		if (m.equals(zero) || this.equals(zero)) {
 			return zero;
 		}
-		if(m.equals(un)){
-			return this.multiply(zero).add(this);
-		}
 
 		return this.multiply(m.sub(un)).add(this);
 
+	}
+
+	public GrandEntier multiplySchool(GrandEntier m) {
+		int i, j, produit, retenu;
+		GrandEntier lepremier= zero;
+		ArrayList<Integer> nouveau = new ArrayList<Integer>();
+		for (i = 0; i < m.length(); i++) {
+			retenu=0;
+			nouveau = new ArrayList<Integer>();
+			for (j = 0; j < this.length(); j++) {
+				produit = m.getDefinition().get(i)
+						* this.getDefinition().get(j) + retenu;
+				retenu = produit / BASE;
+				produit = produit % BASE;
+				nouveau.add(produit);
+			}
+			if (retenu != 0) {
+				nouveau.add(retenu);
+				
+			}
+			GrandEntier resultat = new GrandEntier(nouveau).shiftLeft(i);
+			lepremier=lepremier.add(resultat);
+		}
+		return lepremier;
 	}
 
 	/**
@@ -280,33 +298,32 @@ public class GrandEntier {
 			throw new IllegalArgumentException("this<ge");
 
 		ArrayList<Integer> sousDef = new ArrayList<Integer>();
-		GrandEntier plusGrand, plusPetit,result;
-		int tailleG, tailleP, soustraction, i, retenu;
+		GrandEntier result;
+		int soustraction, i, retenu;
 		retenu = 0;
-		plusGrand = this;
-		plusPetit = ge;
-		tailleG = this.length();
-		tailleP = ge.length();
-		for (i = 0; i < tailleG; i++) {
+
+		for (i = 0; i < this.length(); i++) {
 			soustraction = 0;
-			if (i < tailleP) {
-				soustraction = plusGrand.getDefinition().get(i)
-						- (plusPetit.getDefinition().get(i) + retenu);
+			if (i < ge.length()) {
+				soustraction = this.getDefinition().get(i)
+						- (ge.getDefinition().get(i) + retenu);
 			} else {
-				soustraction = plusGrand.getDefinition().get(i) - retenu;
+				soustraction = this.getDefinition().get(i) - retenu;
 			}
 			if (soustraction < 0) {
-				
+
 				soustraction = BASE + soustraction;
 				retenu = 1;
-			} else
+			} else {
 				retenu = 0;
+			}
+
 			sousDef.add(soustraction);
+
 		}
 		while (sousDef.get(sousDef.size() - 1) == 0) {
 			sousDef.remove(sousDef.size() - 1);
 		}
-		
 		result = new GrandEntier(sousDef);
 		return result;
 
@@ -321,7 +338,67 @@ public class GrandEntier {
 		}
 		return true;
 	}
+	/**
+	 * Calcule la multiplication this * ge en utilisant l'algorithme de
+	 * Karatsuba de manière récursive si la taille des Grandentiers >2048 sinon une multiplication simple 
+	 *
+	 * @param ge
+	 * @return Retourne le résultat de la multiplication
+	 */
+	public GrandEntier multiplyFastOpti(GrandEntier ge) {
+		int tailleG;
+		int verification = 0;
+		// couper les entier en deux
+		if (this.length() < ge.length()) {
+			tailleG = this.length();
+		} else {
+			tailleG = ge.length();
+		}
+		// si la taille est inferieur à 2048 multiplication simple
+		if (tailleG < 2048) {
+			return this.multiplySchool(ge);
+		}
+		int tailleGpar2 = (tailleG / 2) + (tailleG % 2);
 
+		// this = a * B^tailleGpar2 + b, ge = c * B^tailleGpar2 + d selon
+		// l'algorithme de Wikipedia
+		// creation des termes a,b,c,d
+		GrandEntier a = this.shiftRight(tailleGpar2);
+		GrandEntier b = this.sub(a.shiftLeft(tailleGpar2));
+		GrandEntier c = ge.shiftRight(tailleGpar2);
+		GrandEntier d = ge.sub(c.shiftLeft(tailleGpar2));
+
+		// creation des differents produits et sommes.
+		GrandEntier produitac = a.multiplyFast(c);
+		GrandEntier produitbd = b.multiplyFast(d);
+		GrandEntier differenceab;
+		if (a.compareTo(b) == -1) {
+			differenceab = b.sub(a);
+			verification++;
+		} else
+			differenceab = a.sub(b);
+
+		GrandEntier differencecd;
+		if (c.compareTo(d) == -1) {
+			differencecd = d.sub(c);
+			verification++;
+		} else
+			differencecd = c.sub(d);
+		GrandEntier produitDiffabEtDiffcd = differenceab
+				.multiplyFast(differencecd);
+		
+		// acxB^tailleG+(ac+bd-(a-b)(c-d))xB^tailleGpar2+bd
+		if ((verification % 2 == 0)) {
+			return (produitac.shiftLeft(2 * tailleGpar2)).add(((produitac.add(
+					produitbd).sub(produitDiffabEtDiffcd)
+					.shiftLeft(tailleGpar2)).add(produitbd)));
+		}
+		return (produitac.shiftLeft(2 * tailleGpar2)).add(((produitac.add(
+				produitbd).add(produitDiffabEtDiffcd).shiftLeft(tailleGpar2))
+				.add(produitbd)));
+
+	}
+	
 	/**
 	 * Calcule la multiplication this * ge en utilisant l'algorithme de
 	 * Karatsuba de manière récursive
@@ -340,7 +417,7 @@ public class GrandEntier {
 		}
 		// si la taille est egale à 1 multiplication simple
 		if (tailleG <= 1) {
-			return this.multiply(ge);
+			return this.multiplySchool(ge);
 		}
 		int tailleGpar2 = (tailleG / 2) + (tailleG % 2);
 
@@ -413,7 +490,7 @@ public class GrandEntier {
 			for (int i = 1; i <= n; i++) {
 				a = new GrandEntier(l, r);
 				b = new GrandEntier(l, r);
-				 a.multiply(b);
+				a.multiplySchool(b);
 			}
 			simpleTime = System.currentTimeMillis() - t0;
 			r.setSeed(fixedSeed); // pour générer les memes nombres
@@ -429,6 +506,61 @@ public class GrandEntier {
 			fastTime = System.currentTimeMillis() - t0;
 			System.out.println(l + " || " + simpleTime / n + " | " + fastTime
 					/ n);
+			if(simpleTime>fastTime){System.out.println("Le nombre de bits où multiplyFast est plus rapide que le multiply est : "+l);break;}
+		}
+		
+	}
+	
+	/**
+	 * compare experimentalement les temps de calculs moyens de multiply et
+	 * multiplyFast pour des entiers générés aléatoirement
+	 */
+
+	public static void compareBigInteWithOpti(String[] args) throws Exception {
+		int n = Integer.parseInt(args[0]);
+		Random r = new Random(); // génère des nombres pseudo aléatoires
+		long fixedSeed = r.nextLong();
+		long t0; // heure initiale d'une serie de tests de multiplication
+		long simpleTime; // heure finale d'une serie de tests de multiply
+		long fastTime; // heure finale d'une serie de tests de multiplyFast
+		GrandEntier a, b; // les nombres à multiplier
+		BigInteger c,d;
+		System.out.println("\n\n\n");
+		System.out
+				.println("Comparaison experimentale de la complexité de multiply et de multiplyFast");
+		System.out
+				.println("-----------------------------------------------------------\n");
+		System.out.println("Nombre de répétitions pour chaque taille: " + n
+				+ "\n");
+		System.out.println(" || temps moyen | temps moyen ");
+		System.out.println("# bits || multiplyBigInteger | multiplyFastOpti ");
+		System.out.println("----------------------------------");
+		for (int l = 1; l <= MAXBITLENGTH; l *= 2) {
+			r.setSeed(fixedSeed);
+			System.gc(); // nettoyage pour avoir des résultats plus
+							// significatifs
+			t0 = System.currentTimeMillis();
+			for (int i = 1; i <= n; i++) {
+				c = new BigInteger(l, r);
+				d = new BigInteger(l, r);
+				c.multiply(d);
+			}
+			simpleTime = System.currentTimeMillis() - t0;
+			r.setSeed(fixedSeed); // pour générer les memes nombres
+									// pseudoaléatoire
+			System.gc(); // nettoyage pour avoir des résultats plus
+							// significatifs
+			t0 = System.currentTimeMillis();
+			for (int i = 1; i <= n; i++) {
+				a = new GrandEntier(l, r);
+				b = new GrandEntier(l, r);
+				a.multiplyFastOpti(b);
+			}
+			fastTime = System.currentTimeMillis() - t0;
+			System.out.println(l + " || " + simpleTime / n + " | " + fastTime
+					/ n);
+			
 		}
 	}
+
 }

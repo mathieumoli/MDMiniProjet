@@ -11,7 +11,7 @@ import java.util.Random;
 public class TestGrandEntier {
 
 	public static void main(String[] args) throws Exception {
-	//	 Creation de deux ArrayLists définissant les grands entiers
+		// Creation de deux ArrayLists définissant les grands entiers
 		ArrayList<Integer> attttt = new ArrayList<Integer>();
 		attttt.add(15);
 		attttt.add(1);
@@ -52,7 +52,7 @@ public class TestGrandEntier {
 
 		// test du shiftLeft
 		System.out.println("Test du shiftLeft");
-		GrandEntier tro=r0.shiftLeft(4);
+		GrandEntier tro = r0.shiftLeft(4);
 		System.out.println(r0.toString());
 		System.out
 				.println("Resultat attendu : 1 x 16^5 + 15 x 16^4 + 0 x 16^3 + 0 x 16^2 + 0 x 16^1 + 0 x 16^0");
@@ -151,25 +151,29 @@ public class TestGrandEntier {
 				.println("_____________________________________________________________________________");
 
 		// test le multiply recursive de la forme vu en TD
-		System.out
-				.println("test le multiply recursive de la forme vue en TD");
-		ArrayList<Integer> d= new ArrayList<Integer>();
+		System.out.println("test le multiply recursive de la forme vue en TD");
+		ArrayList<Integer> d = new ArrayList<Integer>();
 		d.add(0);
 		d.add(1);
-		GrandEntier r11= new GrandEntier(d);
+		d.add(12);
+		d.add(13);
+		GrandEntier r11 = new GrandEntier(d);
 		GrandEntier r10 = r11.multiply(r11);
+		GrandEntier r12= r11.multiplySchool(r11);
 		System.out.println(r10.toString());
+		System.out.println(r12.toString());
+
 		System.out
 				.println("Resultat attendu : 1 x 16^2 + 0 x 16^1 + 0 x 16^0 ");
-		ArrayList<Integer> e= new ArrayList<Integer>();
+		ArrayList<Integer> e = new ArrayList<Integer>();
 
 		e.add(15);
 		e.add(15);
-		ArrayList<Integer> f= new ArrayList<Integer>();
+		ArrayList<Integer> f = new ArrayList<Integer>();
 		f.add(14);
 		f.add(14);
-		GrandEntier r13= new GrandEntier(f);
-		GrandEntier r14= new GrandEntier(e);
+		GrandEntier r13 = new GrandEntier(f);
+		GrandEntier r14 = new GrandEntier(e);
 		GrandEntier r15 = r13.multiply(r14);
 		System.out.println(r15.toString());
 		System.out
@@ -187,23 +191,35 @@ public class TestGrandEntier {
 		be.add(15);
 		be.add(2);
 
-		GrandEntier r01=new GrandEntier(ae);
-		GrandEntier r21=new GrandEntier(be);
+		GrandEntier r01 = new GrandEntier(ae);
+		GrandEntier r21 = new GrandEntier(be);
 		System.out.println(r01.toString());
 		System.out.println(r21.toString());
 		System.out.println(r01.multiplyFast(r21));
 		System.out.println(r01.multiply(r21));
+//		GrandEntier r101 = new GrandEntier(1000000, new Random());
+//		GrandEntier r121 = new GrandEntier(1000000, new Random());
+//		// System.out.println(r101.toString());
+//		// System.out.println(r121.toString());
+//		r101.multiplyFast(r21);
+//		r101.multiply(r21);
 		
-		String[] v={"1"};
-		try{
-		      GrandEntier.compareSimpleWithFast(v);
-		   }catch(Exception w){
-		      System.err.println("Le programme a besoin d'en entier en paramètre pour specifier le nombre de tests dans une serie de test");
-		      w.printStackTrace();
-		   }
 		
-
-
-		
+		String[] v = { "20" };
+		try {
+			GrandEntier.compareSimpleWithFast(v);
+		} catch (Exception w) {
+			System.err
+					.println("Le programme a besoin d'en entier en paramètre pour specifier le nombre de tests dans une serie de test");
+			w.printStackTrace();
+		}
+		// nous obtenons 4096 le nombre de bits quand multiplyFast plus puissant que multiply 
+		try {
+			GrandEntier.compareBigInteWithOpti(v);
+		} catch (Exception w) {
+			System.err
+					.println("Le programme a besoin d'en entier en paramètre pour specifier le nombre de tests dans une serie de test");
+			w.printStackTrace();
+		}
 	}
 }
